@@ -12,7 +12,7 @@
 | `data.py` | Тестовые данные |
 | `resources/` | Фото для теста создания рецепта |
 | `allure-report/` | Сгенерированный Allure-отчёт (в репозиторий) |
-| `docs/` | Скриншот успешного CI-пайплайна |
+| `ci-screenshots/` | Скриншот успешного CI-пайплайна |
 
 ## Сценарии
 
@@ -51,4 +51,4 @@ Selenoid UI: http://localhost:8080
 
 GitHub Actions: `.github/workflows/ci.yml` (ветки `main`, `master`, `develop`).
 
-Скриншот успешного пайплайна: `docs/ci_pipeline_success.png`
+Скриншот успешного пайплайна: `ci-screenshots/ci_pipeline_success.png`
