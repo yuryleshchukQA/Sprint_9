@@ -1,0 +1,32 @@
+services:
+  selenoid:
+    image: aerokube/selenoid:latest-release
+    container_name: selenoid
+    ports:
+      - "4444:4444"
+    volumes:
+      - ./browsers.json:/etc/selenoid/browsers.json:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["-limit", "4", "-timeout", "2m"]
+
+  selenoid-ui:
+    image: aerokube/selenoid-ui:latest-release
+    container_name: selenoid-ui
+    ports:
+      - "8080:8080"
+    command: ["--selenoid", "http://selenoid:4444"]
+    depends_on:
+      - selenoid
+
+  tests:
+    build: .
+    container_name: foodgram-tests
+    depends_on:
+      - selenoid
+    environment:
+      SELENOID_URL: http://selenoid:4444/wd/hub
+    command: >
+      pytest -v
+      --remote-url=http://selenoid:4444/wd/hub
+      --alluredir=allure-results
+      --clean-alluredir
