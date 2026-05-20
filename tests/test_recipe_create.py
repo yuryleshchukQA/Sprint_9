@@ -1,5 +1,7 @@
 import allure
 
+from helpers import TestDataBuilder
+
 
 @allure.suite("Создание рецепта")
 class TestRecipeCreate:
@@ -8,9 +10,8 @@ class TestRecipeCreate:
         self,
         pages,
         open_recipe_create_page,
-        recipe_form_data,
     ):
-        data = recipe_form_data
+        data = TestDataBuilder.build_recipe_form_data()
         pages.recipe_create.create_recipe(
             data["title"],
             data["search_text"],

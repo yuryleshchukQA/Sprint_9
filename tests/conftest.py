@@ -3,20 +3,7 @@ import os
 import pytest
 from selenium import webdriver
 
-from data import (
-    PHOTO_PATH,
-    RECIPE_COOKING_TIME,
-    RECIPE_DESCRIPTION,
-    RECIPE_INGREDIENT_AMOUNT,
-    RECIPE_INGREDIENT_NAME,
-    RECIPE_INGREDIENT_SEARCH,
-    TEST_USER_EMAIL,
-    TEST_USER_PASSWORD,
-    URL_RECIPE_CREATE,
-    URL_SIGNIN,
-    build_unique_recipe_title,
-    build_unique_user,
-)
+from data import TestData, Urls
 from pages.header_page import HeaderPage
 from pages.recipe_create_page import RecipeCreatePage
 from pages.recipes_page import RecipesPage
@@ -50,7 +37,6 @@ def driver(request):
     else:
         drv = webdriver.Chrome(options=options)
 
-    drv.implicitly_wait(0)
     yield drv
     drv.quit()
 
@@ -61,42 +47,19 @@ def pages(driver):
 
 
 @pytest.fixture
-def unique_user():
-    return build_unique_user()
-
-
-@pytest.fixture
-def unique_recipe_title():
-    return build_unique_recipe_title()
-
-
-@pytest.fixture
 def authenticated_user(pages):
-    pages.signin.open_signin(URL_SIGNIN)
-    pages.signin.signin(TEST_USER_EMAIL, TEST_USER_PASSWORD)
+    pages.signin.open_signin(Urls.SIGNIN)
+    pages.signin.signin(TestData.USER_EMAIL, TestData.USER_PASSWORD)
     pages.signin.wait_redirect_to_recipes()
     return {
-        "email": TEST_USER_EMAIL,
-        "password": TEST_USER_PASSWORD,
-    }
-
-
-@pytest.fixture
-def recipe_form_data(unique_recipe_title):
-    return {
-        "title": unique_recipe_title,
-        "search_text": RECIPE_INGREDIENT_SEARCH,
-        "ingredient_name": RECIPE_INGREDIENT_NAME,
-        "amount": RECIPE_INGREDIENT_AMOUNT,
-        "cooking_time": RECIPE_COOKING_TIME,
-        "description": RECIPE_DESCRIPTION,
-        "photo_path": str(PHOTO_PATH),
+        "email": TestData.USER_EMAIL,
+        "password": TestData.USER_PASSWORD,
     }
 
 
 @pytest.fixture
 def open_recipe_create_page(authenticated_user, pages):
-    pages.recipe_create.open_create_recipe(URL_RECIPE_CREATE)
+    pages.recipe_create.open_create_recipe(Urls.RECIPE_CREATE)
     return authenticated_user
 
 

@@ -1,14 +1,15 @@
 import allure
 
-from data import URL_SIGNIN
+from data import Urls
+from helpers import TestDataBuilder
 
 
 @allure.suite("Создание аккаунта")
 class TestSignup:
     @allure.title("Регистрация нового пользователя и переход на страницу авторизации")
-    def test_create_account_redirects_to_signin(self, pages, unique_user):
-        user = unique_user
-        pages.signin.open_signin(URL_SIGNIN)
+    def test_create_account_redirects_to_signin(self, pages):
+        user = TestDataBuilder.build_unique_user()
+        pages.signin.open_signin(Urls.SIGNIN)
         pages.signin.go_to_signup()
         pages.signup.signup(
             user["first_name"],

@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver.support import expected_conditions as EC
 
 from locators.locators import RecipesPageLocators
 from pages.base_page import BasePage
@@ -17,17 +16,14 @@ class RecipesPage(BasePage):
         )
 
     def _is_recipe_detail_visible(self, title: str) -> bool:
-        cards = self.driver.find_elements(*RecipesPageLocators.RECIPE_DETAIL_CARD)
-        titles = self.driver.find_elements(
-            *RecipesPageLocators.recipe_detail_title(title)
+        return self.are_elements_present(
+            RecipesPageLocators.RECIPE_DETAIL_CARD
+        ) and self.are_elements_present(
+            RecipesPageLocators.recipe_detail_title(title)
         )
-        return bool(cards) and bool(titles)
 
     def _is_recipe_list_card_visible(self, title: str) -> bool:
-        elements = self.driver.find_elements(
-            *RecipesPageLocators.recipe_card_title(title)
-        )
-        return bool(elements) and elements[0].is_displayed()
+        return self.is_any_displayed(RecipesPageLocators.recipe_card_title(title))
 
     @allure.step('Карточка рецепта с указанным названием отображается')
     def is_recipe_card_visible(self, title: str) -> bool:

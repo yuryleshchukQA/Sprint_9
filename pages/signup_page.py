@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver.support import expected_conditions as EC
 
 from locators.locators import SignupPageLocators
 from pages.base_page import BasePage
@@ -23,11 +22,7 @@ class SignupPage(BasePage):
 
     @allure.step('Нажать кнопку «Создать аккаунт»')
     def submit_signup(self) -> None:
-        self.wait.until(
-            lambda _: self.driver.find_element(
-                *SignupPageLocators.BUTTON_CREATE_ACCOUNT
-            ).is_enabled()
-        )
+        self.wait_until_enabled(SignupPageLocators.BUTTON_CREATE_ACCOUNT)
         self.click(SignupPageLocators.BUTTON_CREATE_ACCOUNT)
 
     @allure.step('Зарегистрировать пользователя')
@@ -44,4 +39,4 @@ class SignupPage(BasePage):
 
     @allure.step('Дождаться перехода на страницу авторизации')
     def wait_redirect_to_signin(self) -> None:
-        self.wait.until(EC.url_contains("/signin"))
+        self.wait_url_contains("/signin")

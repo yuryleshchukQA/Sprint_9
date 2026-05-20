@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver.support import expected_conditions as EC
 
 from locators.locators import RecipeCreatePageLocators
 from pages.base_page import BasePage
@@ -9,9 +8,7 @@ class RecipeCreatePage(BasePage):
     @allure.step('Открыть страницу создания рецепта')
     def open_create_recipe(self, url: str) -> None:
         self.open(url)
-        self.wait.until(
-            EC.presence_of_element_located(RecipeCreatePageLocators.INPUT_INGREDIENT_NAME)
-        )
+        self.wait_presence(RecipeCreatePageLocators.INPUT_INGREDIENT_NAME)
 
     @allure.step('Заполнить название рецепта')
     def fill_title(self, title: str) -> None:
@@ -24,15 +21,11 @@ class RecipeCreatePage(BasePage):
         ingredient_name: str,
         amount: str,
     ) -> None:
-        ingredient_input = self.find_visible(RecipeCreatePageLocators.INPUT_INGREDIENT_NAME)
-        ingredient_input.click()
-        ingredient_input.send_keys(search_text)
+        self.send_keys(RecipeCreatePageLocators.INPUT_INGREDIENT_NAME, search_text)
         self.click(RecipeCreatePageLocators.ingredient_suggestion(ingredient_name))
         self.send_keys(RecipeCreatePageLocators.INPUT_INGREDIENT_AMOUNT, amount)
         self.click(RecipeCreatePageLocators.BUTTON_ADD_INGREDIENT)
-        self.wait.until(
-            EC.presence_of_element_located(RecipeCreatePageLocators.INGREDIENTS_ADDED_BLOCK)
-        )
+        self.wait_presence(RecipeCreatePageLocators.INGREDIENTS_ADDED_BLOCK)
 
     @allure.step('Заполнить время приготовления')
     def fill_cooking_time(self, minutes: str) -> None:
@@ -44,18 +37,13 @@ class RecipeCreatePage(BasePage):
 
     @allure.step('Загрузить фото рецепта')
     def upload_photo(self, photo_path: str) -> None:
-        self.driver.find_element(*RecipeCreatePageLocators.INPUT_PHOTO).send_keys(photo_path)
+        self.upload_file(RecipeCreatePageLocators.INPUT_PHOTO, photo_path)
 
     @allure.step('Нажать кнопку «Создать рецепт»')
     def submit_recipe(self) -> None:
-        self.wait.until(
-            EC.element_to_be_clickable(RecipeCreatePageLocators.BUTTON_CREATE_RECIPE)
-        )
+        self.wait_clickable(RecipeCreatePageLocators.BUTTON_CREATE_RECIPE)
         self.click(RecipeCreatePageLocators.BUTTON_CREATE_RECIPE)
-        self.wait.until(
-            lambda driver: "/recipes/" in driver.current_url
-            and "/recipes/create" not in driver.current_url
-        )
+        self.wait_url_is_recipe_after_create()
 
     @allure.step('Создать рецепт с заполнением всех полей')
     def create_recipe(

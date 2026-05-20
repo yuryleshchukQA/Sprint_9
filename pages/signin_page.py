@@ -1,7 +1,6 @@
 import allure
-from selenium.webdriver.support import expected_conditions as EC
 
-from data import URL_RECIPES
+from data import Urls
 from locators.locators import SigninPageLocators
 from pages.base_page import BasePage
 
@@ -31,11 +30,11 @@ class SigninPage(BasePage):
 
     @allure.step('Дождаться перехода на главную страницу')
     def wait_redirect_to_recipes(self) -> None:
-        self.wait.until(EC.url_to_be(URL_RECIPES))
+        self.wait_url_to_be(Urls.RECIPES)
 
     @allure.step('Открыта главная страница с рецептами')
     def is_on_recipes_main_page(self) -> bool:
-        return self.driver.current_url.rstrip("/") == URL_RECIPES.rstrip("/")
+        return self.current_url_equals(Urls.RECIPES)
 
     @allure.step('Форма авторизации отображается')
     def is_signin_form_displayed(self) -> bool:
